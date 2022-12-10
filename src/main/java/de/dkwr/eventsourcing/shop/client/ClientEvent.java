@@ -26,13 +26,13 @@ public class ClientEvent {
         @Getter
         private String phone;
         @Getter
-        private Map<String, String> changedFields;
-        protected ClientUpdatedEvent(UUID aggregateId, LocalDateTime date, int version, String name, String phone, Map<String, String> changedFields) {
+        private Map<String, String> oldValuesBeforeChange;
+        protected ClientUpdatedEvent(UUID aggregateId, LocalDateTime date, int version, String name, String phone, Map<String, String> oldValuesBeforeChange) {
             super(aggregateId, date, version, "client-updated");
 
             this.name = name;
             this.phone = phone;
-            this.changedFields = changedFields;
+            this.oldValuesBeforeChange = oldValuesBeforeChange;
         }
     }
 
@@ -42,16 +42,16 @@ public class ClientEvent {
         @Getter
         private String phone;
         @Getter
-        private Map<String, String> changedFields;
+        private Map<String, String> oldValuesBeforeChange;
         @Getter
         private int reversedEventVersion;
 
-        protected ReverseClientUpdatedEvent(UUID aggregateId, LocalDateTime date, int version, String name, String phone, Map<String, String> changedFields, int reversedEventVersion) {
+        protected ReverseClientUpdatedEvent(UUID aggregateId, LocalDateTime date, int version, String name, String phone, Map<String, String> oldValuesBeforeChange, int reversedEventVersion) {
             super(aggregateId, date, version, "client-update-reversed");
 
             this.name = name;
             this.phone = phone;
-            this.changedFields = changedFields;
+            this.oldValuesBeforeChange = oldValuesBeforeChange;
             this.reversedEventVersion = reversedEventVersion;
         }
     }

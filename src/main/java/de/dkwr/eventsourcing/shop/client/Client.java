@@ -34,9 +34,9 @@ public class Client {
     }
 
     public void update(String name, String phone) {
-        Map<String, String> changedFields = getChangedFields(name, phone);
+        Map<String, String> oldValuesBeforeChange = createMapOfOldValuesIfChanged(name, phone);
         ClientEvent.ClientUpdatedEvent clientUpdatedEvent = new ClientEvent.ClientUpdatedEvent(
-                aggregateId, LocalDateTime.now(), nextVersion(), name, phone, changedFields);
+                aggregateId, LocalDateTime.now(), nextVersion(), name, phone, oldValuesBeforeChange);
         applyNewEvent(clientUpdatedEvent);
     }
 
@@ -44,20 +44,20 @@ public class Client {
         String name = updatedFields.getOrDefault("name", getName());
         String phone = updatedFields.getOrDefault("phone", getPhone());
 
-        Map<String, String> changedFields = getChangedFields(name, phone);
+        Map<String, String> oldValuesBeforeChange = createMapOfOldValuesIfChanged(name, phone);
         ClientEvent.ReverseClientUpdatedEvent reverseClientUpdatedEvent = new ClientEvent.ReverseClientUpdatedEvent(
-                aggregateId, LocalDateTime.now(), nextVersion(), name, phone, changedFields, reversedEventVersion
+                aggregateId, LocalDateTime.now(), nextVersion(), name, phone, oldValuesBeforeChange, reversedEventVersion
         );
 
         applyNewEvent(reverseClientUpdatedEvent);
     }
 
-    private Map<String, String> getChangedFields(String newName, String newPhone) {
-        HashMap<String, String> mapOfChangedValues = new HashMap<>();
-        if (newName.compareTo(name) != 0) mapOfChangedValues.put("name", name);
-        if (newPhone.compareTo(phone) != 0) mapOfChangedValues.put("phone", phone);
+    private Map<String, String> createMapOfOldValuesIfChanged(String newName, String newPhone) {
+        HashMap<String, String> valuesBeforeChangeMap = new HashMap<>();
+        if (newName.compareTo(name) != 0) valuesBeforeChangeMap.put("name", name);
+        if (newPhone.compareTo(phone) != 0) valuesBeforeChangeMap.put("phone", phone);
 
-        return mapOfChangedValues;
+        return valuesBeforeChangeMap;
     }
 
     private boolean apply(Event event) {

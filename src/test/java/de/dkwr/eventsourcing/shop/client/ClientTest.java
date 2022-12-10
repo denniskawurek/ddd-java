@@ -98,10 +98,16 @@ public class ClientTest {
 
         Client client = new Client(aggregateId, events);
 
-        client.reverseUpdate(clientUpdatedEvent.getVersion(), clientUpdatedEvent.getChangedFields());
+        client.reverseUpdate(clientUpdatedEvent.getVersion(), clientUpdatedEvent.getOldValuesBeforeChange());
 
         Assertions.assertEquals(1, client.getAppliedNewEvents().size());
         Assertions.assertEquals(nameBeforeUpdate, client.getName());
-        client.getAppliedNewEvents().get(0); // TODO: Check name
+
+        Event appliedEvent = client.getAppliedNewEvents().get(0); // TODO: Check name
+        Assertions.assertEquals("client-update-reversed", appliedEvent.getEventType());
+
+        ClientEvent.ReverseClientUpdatedEvent reverseClientUpdatedEvent = (ClientEvent.ReverseClientUpdatedEvent) appliedEvent;
+        Assertions.assertEquals(clientUpdatedEvent.getOldValuesBeforeChange().get("name"), reverseClientUpdatedEvent.getName());
+        Assertions.assertEquals(clientUpdatedEvent.getPhone(), reverseClientUpdatedEvent.getPhone());
     }
 }
