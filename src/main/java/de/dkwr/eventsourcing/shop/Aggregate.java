@@ -1,43 +1,68 @@
 package de.dkwr.eventsourcing.shop;
 
 import de.dkwr.eventsourcing.store.Event;
-import org.springframework.lang.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static java.util.Collections.emptyList;
-
+@Slf4j
 public abstract class Aggregate {
 
+    private final List<Event> appliedNewEvents = new ArrayList<>();
     private UUID aggregateId;
-    private List<Event> newEvents;
-
     private int version;
-
-    protected Aggregate(UUID id) {
-        this(id, emptyList());
-    }
-
-    protected Aggregate(@NonNull UUID aggregateId, @NonNull List<Event> events) {
+    protected Aggregate() {}
+    protected Aggregate(UUID aggregateId, List<Event> events) {
         this.aggregateId = aggregateId;
-        events.forEach(e -> {
-            apply(e);
-            this.version = e.getVersion();
-        });
-        this.newEvents = new ArrayList<>();
+        restoreFromEvents(events);
     }
 
-    private void apply(Event event) {
-        try {
-            Method method = this.getClass().getDeclaredMethod("apply", event.getClass());
-            method.setAccessible(true);
-            method.invoke(this, event);
-        } catch (InvocationTargetException | IllegalAccessException | NoSuchMethodException e) {
-            throw new RuntimeException(e);
+    private void restoreFromEvents(List<Event> events) {
+        events.forEach(event -> {
+            apply(event);
+            this.version = event.getVersion();
+        });
+    }
+
+    public void applyNewEvent(Event event) {
+        if(apply(event)) {
+            appliedNewEvents.add(event);
         }
+    }
+
+    protected boolean apply(Event event) {
+        if (!isNextEvent(event)) {
+            log.error("Failed to apply event. This is not the next event. Current version: {} next version: {} Event version: {}",
+                    version,
+                    nextVersion(),
+                    event.getVersion());
+            return false;
+        }
+        applyEvent(event);
+        return true;
+    }
+
+    /**
+     * Apply event based on type.
+     * @param event The event to apply.
+     */
+    protected abstract void applyEvent(Event event);
+
+    public int getVersion() {
+        return version;
+    }
+
+    private boolean isNextEvent(Event event) {
+        return event.getVersion() == nextVersion();
+    }
+
+    protected int nextVersion() {
+        return version + appliedNewEvents.size() + 1;
+    }
+
+    public List<Event> getAppliedNewEvents() {
+        return List.copyOf(appliedNewEvents);
     }
 }

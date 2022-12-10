@@ -5,5 +5,5 @@ import java.util.UUID;
 
 public interface EventStoreService {
         List<Event> fetchEvents(UUID aggregateId);
-        void store(UUID aggregateId, long version, List<Event> events);
+        void storeEvent(UUID aggregateId, long version, List<Event> events);
 }

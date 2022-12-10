@@ -103,8 +103,8 @@ public class ClientTest {
         Assertions.assertEquals(1, client.getAppliedNewEvents().size());
         Assertions.assertEquals(nameBeforeUpdate, client.getName());
 
-        Event appliedEvent = client.getAppliedNewEvents().get(0); // TODO: Check name
-        Assertions.assertEquals("client-update-reversed", appliedEvent.getEventType());
+        Event appliedEvent = client.getAppliedNewEvents().get(0);
+        Assertions.assertEquals(ClientEvent.Type.CLIENT_UPDATE_REVERSED, appliedEvent.getEventType());
 
         ClientEvent.ReverseClientUpdatedEvent reverseClientUpdatedEvent = (ClientEvent.ReverseClientUpdatedEvent) appliedEvent;
         Assertions.assertEquals(clientUpdatedEvent.getOldValuesBeforeChange().get("name"), reverseClientUpdatedEvent.getName());

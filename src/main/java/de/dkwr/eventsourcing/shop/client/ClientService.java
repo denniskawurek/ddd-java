@@ -36,7 +36,7 @@ public class ClientService {
         Client client = new Client(clientId, events);
         client.update(name, phone);
 
-        eventStore.store(clientId, client.getVersion(), events);
+        eventStore.storeEvent(clientId, client.getVersion(), events);
 
         return Optional.of(client);
     }

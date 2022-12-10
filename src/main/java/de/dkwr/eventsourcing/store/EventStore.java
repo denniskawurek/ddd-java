@@ -18,7 +18,7 @@ public class EventStore implements EventStoreService {
     }
 
     @Override
-    public void store(UUID aggregateId, long version, List<Event> events) {
+    public void storeEvent(UUID aggregateId, long version, List<Event> events) {
         eventStoreRepository.save(aggregateId, version, events);
     }
 }

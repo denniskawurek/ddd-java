@@ -1,5 +1,6 @@
 package de.dkwr.eventsourcing.shop.client;
 
+import de.dkwr.eventsourcing.shop.Aggregate;
 import de.dkwr.eventsourcing.store.Event;
 import lombok.extern.slf4j.Slf4j;
 
@@ -7,13 +8,13 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Slf4j
-public class Client {
+public class Client extends Aggregate {
     private UUID aggregateId;
     private String name;
     private String phone;
-    private int version = 0;
+    private final int version = 0;
 
-    private final List<Event> appliedNewEvents = new LinkedList<>();
+    private final List<Event> appliedNewEvents = new ArrayList<>();
 
     public Client(String name, String phone) {
         ClientEvent.ClientCreatedEvent clientCreatedEvent = new ClientEvent.ClientCreatedEvent(
@@ -22,15 +23,7 @@ public class Client {
     }
 
     protected Client(UUID aggregateId, List<Event> events) {
-        this.aggregateId = aggregateId;
-        restoreFromEvents(events);
-    }
-
-    private void restoreFromEvents(List<Event> events) {
-        events.forEach(event -> {
-            this.apply(event);
-            this.version = event.getVersion();
-        });
+        super(aggregateId, events);
     }
 
     public void update(String name, String phone) {
@@ -60,33 +53,12 @@ public class Client {
         return valuesBeforeChangeMap;
     }
 
-    private boolean apply(Event event) {
-        if (!isNextEvent(event)) {
-            log.error("Failed to apply event. This is not the next event. Current version: {} next version: {} Event version: {}",
-                    version,
-                    nextVersion(),
-                    event.getVersion());
-            return false;
-        }
-        applyEvent(event);
-        return true;
-    }
-
-    public void applyNewEvent(Event event) {
-        if(apply(event)) {
-            appliedNewEvents.add(event);
-        }
-    }
-
-    private boolean isNextEvent(Event event) {
-        return event.getVersion() == nextVersion();
-    }
-
-    private void applyEvent(Event event) {
-        switch (event.getEventType()) {
-            case "client-created" -> applyClientCreatedEvent((ClientEvent.ClientCreatedEvent) event);
-            case "client-updated" -> applyClientUpdatedEvent((ClientEvent.ClientUpdatedEvent) event);
-            case "client-update-reversed" -> applyReverseClientUpdateEvent((ClientEvent.ReverseClientUpdatedEvent) event);
+    @Override
+    protected void applyEvent(Event event) {
+        switch ((ClientEvent.Type) event.getEventType()) {
+            case CLIENT_CREATED -> applyClientCreatedEvent((ClientEvent.ClientCreatedEvent) event);
+            case CLIENT_UPDATED -> applyClientUpdatedEvent((ClientEvent.ClientUpdatedEvent) event);
+            case CLIENT_UPDATE_REVERSED -> applyReverseClientUpdateEvent((ClientEvent.ReverseClientUpdatedEvent) event);
         }
     }
 
@@ -106,20 +78,6 @@ public class Client {
         log.info("Applying event: {}", event.getEventType());
         this.name = event.getName();
         this.phone = event.getPhone();
-    }
-
-
-
-    private int nextVersion() {
-        return version + appliedNewEvents.size() + 1;
-    }
-
-    public List<Event> getAppliedNewEvents() {
-        return List.copyOf(appliedNewEvents);
-    }
-
-    public int getVersion() {
-        return version;
     }
 
     public String getName() {

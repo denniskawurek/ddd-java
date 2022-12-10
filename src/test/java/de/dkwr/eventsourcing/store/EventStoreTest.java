@@ -1,5 +1,6 @@
 package de.dkwr.eventsourcing.store;
 
+import de.dkwr.eventsourcing.shop.EventType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class EventStoreTest {
 
         events.add(new TestEvent(aggregateId, 1));
 
-        eventStores.store(aggregateId, 1, events);
+        eventStores.storeEvent(aggregateId, 1, events);
 
         List<Event> storedEvents = eventStores.fetchEvents(aggregateId);
 
@@ -33,8 +34,12 @@ public class EventStoreTest {
         private final UUID aggregateId;
         private final int version;
 
+        public enum Type implements EventType {
+            TEST_EVENT
+        }
+
         public TestEvent(UUID aggregateId, int version) {
-            super(aggregateId, LocalDateTime.now(), version, "test-event");
+            super(aggregateId, LocalDateTime.now(), version, Type.TEST_EVENT);
             this.aggregateId = aggregateId;
             this.version = version;
         }

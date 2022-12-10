@@ -1,5 +1,7 @@
 package de.dkwr.eventsourcing.store;
 
+import de.dkwr.eventsourcing.shop.EventType;
+
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
@@ -8,9 +10,9 @@ public abstract class Event {
     private final UUID aggregateId;
     private final LocalDateTime date;
     private final int version;
-    private final String eventType;
+    private final EventType eventType;
 
-    protected Event(UUID aggregateId, LocalDateTime date, int version, String eventType) {
+    protected Event(UUID aggregateId, LocalDateTime date, int version, EventType eventType) {
         this.aggregateId = aggregateId;
         this.date = date;
         this.version = version;
@@ -29,5 +31,5 @@ public abstract class Event {
         return version;
     }
 
-    public String getEventType() { return eventType; }
+    public EventType getEventType() { return eventType; }
 }
