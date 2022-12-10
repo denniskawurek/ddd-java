@@ -1,4 +1,6 @@
-package de.dkwr.eventsourcing.store;
+package de.dkwr.eventsourcing.shop;
+
+import de.dkwr.eventsourcing.shop.Event;
 
 import java.util.List;
 import java.util.UUID;

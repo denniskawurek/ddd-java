@@ -1,6 +1,6 @@
 package de.dkwr.eventsourcing.shop.client;
 
-import de.dkwr.eventsourcing.store.Event;
+import de.dkwr.eventsourcing.shop.Event;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

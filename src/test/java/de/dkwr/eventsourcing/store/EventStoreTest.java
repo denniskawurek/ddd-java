@@ -1,5 +1,6 @@
 package de.dkwr.eventsourcing.store;
 
+import de.dkwr.eventsourcing.shop.Event;
 import de.dkwr.eventsourcing.shop.EventType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

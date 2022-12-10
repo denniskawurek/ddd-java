@@ -1,6 +1,6 @@
 package de.dkwr.eventsourcing.shop.client;
 
-import de.dkwr.eventsourcing.store.Event;
+import de.dkwr.eventsourcing.shop.Event;
 import de.dkwr.eventsourcing.store.EventStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package de.dkwr.eventsourcing.shop.client;
 
 import de.dkwr.eventsourcing.shop.Aggregate;
-import de.dkwr.eventsourcing.store.Event;
+import de.dkwr.eventsourcing.shop.Event;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;

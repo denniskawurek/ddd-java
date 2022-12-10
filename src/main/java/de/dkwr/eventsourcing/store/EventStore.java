@@ -1,6 +1,8 @@
 package de.dkwr.eventsourcing.store;
 
-import de.dkwr.eventsourcing.store.inmemory.EventStoreRepository;
+import de.dkwr.eventsourcing.shop.Event;
+import de.dkwr.eventsourcing.shop.EventStoreService;
+import de.dkwr.eventsourcing.store.inmemory.InMemoryEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +12,7 @@ import java.util.UUID;
 @Service
 public class EventStore implements EventStoreService {
     @Autowired
-    private EventStoreRepository eventStoreRepository;
+    private InMemoryEventRepository eventStoreRepository;
 
     @Override
     public List<Event> fetchEvents(UUID aggregateId) {

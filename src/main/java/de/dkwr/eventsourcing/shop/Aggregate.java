@@ -1,6 +1,5 @@
 package de.dkwr.eventsourcing.shop;
 
-import de.dkwr.eventsourcing.store.Event;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
