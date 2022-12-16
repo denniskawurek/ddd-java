@@ -1,9 +1,6 @@
 package de.dkwr.eventsourcing.shop;
 
-import de.dkwr.eventsourcing.shop.EventType;
-
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.UUID;
 
 public abstract class Event {

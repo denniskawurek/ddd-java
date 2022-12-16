@@ -1,0 +1,5 @@
+server:
+  port: 8080
+logging:
+  level:
+    _org.springframework.web.servlet.HandlerMapping.Mappings: debug

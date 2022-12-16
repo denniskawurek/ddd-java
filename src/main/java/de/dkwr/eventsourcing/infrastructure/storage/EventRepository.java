@@ -1,4 +1,4 @@
-package de.dkwr.eventsourcing.store;
+package de.dkwr.eventsourcing.infrastructure.storage;
 
 import de.dkwr.eventsourcing.shop.Event;
 

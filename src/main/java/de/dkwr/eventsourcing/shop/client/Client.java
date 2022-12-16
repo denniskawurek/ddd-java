@@ -2,6 +2,7 @@ package de.dkwr.eventsourcing.shop.client;
 
 import de.dkwr.eventsourcing.shop.Aggregate;
 import de.dkwr.eventsourcing.shop.Event;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.*;
 
 @Slf4j
 public class Client extends Aggregate {
+    @Getter
     private UUID aggregateId;
     private String name;
     private String phone;
@@ -70,6 +72,7 @@ public class Client extends Aggregate {
 
     private void applyClientCreatedEvent(ClientEvent.ClientCreatedEvent event) {
         log.info("Applying event: {}", event.getEventType());
+        this.aggregateId = event.getAggregateId();
         this.name = event.getName();
         this.phone = event.getPhone();
     }
@@ -87,5 +90,4 @@ public class Client extends Aggregate {
     public String getPhone() {
         return phone;
     }
-
 }
