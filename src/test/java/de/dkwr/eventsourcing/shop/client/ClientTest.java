@@ -18,7 +18,7 @@ public class ClientTest {
         Client client = new Client(name, phone);
 
         Assertions.assertEquals(0, client.getVersion());
-        Assertions.assertEquals(1, client.getAppliedNewEvents().size());
+        Assertions.assertEquals(1, client.getUncommittedEvents().size());
         Assertions.assertEquals(name, client.getName());
         Assertions.assertEquals(phone, client.getPhone());
     }
@@ -35,7 +35,7 @@ public class ClientTest {
         client.update(editedName, phone);
 
         Assertions.assertEquals(0, client.getVersion());
-        Assertions.assertEquals(2, client.getAppliedNewEvents().size());
+        Assertions.assertEquals(2, client.getUncommittedEvents().size());
         Assertions.assertEquals(editedName, client.getName());
         Assertions.assertEquals(phone, client.getPhone());
     }
@@ -65,7 +65,7 @@ public class ClientTest {
         Assertions.assertEquals(2, client.getVersion());
         Assertions.assertEquals(name, client.getName());
         Assertions.assertEquals(phone, client.getPhone());
-        Assertions.assertEquals(0, client.getAppliedNewEvents().size());
+        Assertions.assertEquals(0, client.getUncommittedEvents().size());
 
         phone = "00475551233199";
         client.update(name, phone);
@@ -73,7 +73,7 @@ public class ClientTest {
         Assertions.assertEquals(phone, client.getPhone());
         Assertions.assertEquals(2, client.getVersion());
         Assertions.assertEquals(name, client.getName());
-        Assertions.assertEquals(1, client.getAppliedNewEvents().size());
+        Assertions.assertEquals(1, client.getUncommittedEvents().size());
     }
 
     @Test
@@ -100,10 +100,10 @@ public class ClientTest {
 
         client.reverseUpdate(clientUpdatedEvent.getVersion(), clientUpdatedEvent.getOldValuesBeforeChange());
 
-        Assertions.assertEquals(1, client.getAppliedNewEvents().size());
+        Assertions.assertEquals(1, client.getUncommittedEvents().size());
         Assertions.assertEquals(nameBeforeUpdate, client.getName());
 
-        Event appliedEvent = client.getAppliedNewEvents().get(0);
+        Event appliedEvent = client.getUncommittedEvents().get(0);
         Assertions.assertEquals(ClientEvent.Type.CLIENT_UPDATE_REVERSED, appliedEvent.getEventType());
 
         ClientEvent.ReverseClientUpdatedEvent reverseClientUpdatedEvent = (ClientEvent.ReverseClientUpdatedEvent) appliedEvent;

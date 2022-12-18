@@ -14,9 +14,6 @@ public class Client extends Aggregate {
     private UUID aggregateId;
     private String name;
     private String phone;
-    private final int version = 0;
-
-    private final List<Event> appliedNewEvents = new ArrayList<>();
 
     public Client(String name, String phone) {
         ClientEvent.ClientCreatedEvent clientCreatedEvent = new ClientEvent.ClientCreatedEvent(
@@ -56,7 +53,7 @@ public class Client extends Aggregate {
     }
 
     @Override
-    protected void applyEvent(Event event) {
+    protected void processEvent(Event event) {
         switch ((ClientEvent.Type) event.getEventType()) {
             case CLIENT_CREATED -> applyClientCreatedEvent((ClientEvent.ClientCreatedEvent) event);
             case CLIENT_UPDATED -> applyClientUpdatedEvent((ClientEvent.ClientUpdatedEvent) event);

@@ -9,7 +9,7 @@ import java.util.UUID;
 @Slf4j
 public abstract class Aggregate {
 
-    private final List<Event> appliedNewEvents = new ArrayList<>();
+    private final List<Event> uncommittedEvents = new ArrayList<>();
     private UUID aggregateId;
     private int version;
     protected Aggregate() {}
@@ -27,7 +27,7 @@ public abstract class Aggregate {
 
     public void applyNewEvent(Event event) {
         if(apply(event)) {
-            appliedNewEvents.add(event);
+            uncommittedEvents.add(event);
         }
     }
 
@@ -39,7 +39,7 @@ public abstract class Aggregate {
                     event.getVersion());
             return false;
         }
-        applyEvent(event);
+        processEvent(event);
         return true;
     }
 
@@ -47,7 +47,7 @@ public abstract class Aggregate {
      * Apply event based on type.
      * @param event The event to apply.
      */
-    protected abstract void applyEvent(Event event);
+    protected abstract void processEvent(Event event);
 
     public int getVersion() {
         return version;
@@ -58,10 +58,10 @@ public abstract class Aggregate {
     }
 
     protected int nextVersion() {
-        return version + appliedNewEvents.size() + 1;
+        return version + uncommittedEvents.size() + 1;
     }
 
-    public List<Event> getAppliedNewEvents() {
-        return List.copyOf(appliedNewEvents);
+    public List<Event> getUncommittedEvents() {
+        return List.copyOf(uncommittedEvents);
     }
 }

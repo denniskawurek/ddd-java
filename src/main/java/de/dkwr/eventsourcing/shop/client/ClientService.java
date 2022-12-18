@@ -16,7 +16,7 @@ public class ClientService {
 
     public Client createClient(String name, String phone) {
         Client client = new Client(name, phone);
-        eventStorage.storeEvents(client.getAggregateId(), client.getVersion(), client.getAppliedNewEvents());
+        eventStorage.storeEvents(client.getAggregateId(), client.getVersion(), client.getUncommittedEvents());
         return client;
     }
 
@@ -42,7 +42,7 @@ public class ClientService {
         Client client = new Client(clientId, events);
         client.update(name, phone);
 
-        eventStorage.storeEvents(clientId, client.getVersion(), client.getAppliedNewEvents());
+        eventStorage.storeEvents(clientId, client.getVersion(), client.getUncommittedEvents());
 
         return Optional.of(client);
     }
