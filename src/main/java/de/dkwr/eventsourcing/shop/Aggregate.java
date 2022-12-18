@@ -25,7 +25,7 @@ public abstract class Aggregate {
         });
     }
 
-    public void applyNewEvent(Event event) {
+    protected void applyNewEvent(Event event) {
         if(apply(event)) {
             uncommittedEvents.add(event);
         }
@@ -61,7 +61,7 @@ public abstract class Aggregate {
         return version + uncommittedEvents.size() + 1;
     }
 
-    public List<Event> getUncommittedEvents() {
+    protected List<Event> getUncommittedEvents() {
         return List.copyOf(uncommittedEvents);
     }
 }

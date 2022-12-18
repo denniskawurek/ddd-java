@@ -46,6 +46,4 @@ public class ClientController {
     private ClientDTO toClientDTO(Client client) {
         return new ClientDTO(client.getAggregateId().toString(), client.getName(), client.getPhone());
     }
-
-
 }

@@ -15,7 +15,7 @@ public class Client extends Aggregate {
     private String name;
     private String phone;
 
-    public Client(String name, String phone) {
+    protected Client(String name, String phone) {
         ClientEvent.ClientCreatedEvent clientCreatedEvent = new ClientEvent.ClientCreatedEvent(
                 UUID.randomUUID(), LocalDateTime.now(), nextVersion(), name, phone);
         applyNewEvent(clientCreatedEvent);
@@ -25,14 +25,14 @@ public class Client extends Aggregate {
         super(aggregateId, events);
     }
 
-    public void update(String name, String phone) {
+    protected void update(String name, String phone) {
         Map<String, String> oldValuesBeforeChange = createMapOfOldValuesIfChanged(name, phone);
         ClientEvent.ClientUpdatedEvent clientUpdatedEvent = new ClientEvent.ClientUpdatedEvent(
                 aggregateId, LocalDateTime.now(), nextVersion(), name, phone, oldValuesBeforeChange);
         applyNewEvent(clientUpdatedEvent);
     }
 
-    public void reverseUpdate(int reversedEventVersion, Map<String, String> updatedFields) { // TODO: changedClientFields into a container which holds the map
+    protected void reverseUpdate(int reversedEventVersion, Map<String, String> updatedFields) { // TODO: changedClientFields into a container which holds the map
         String name = updatedFields.getOrDefault("name", getName());
         String phone = updatedFields.getOrDefault("phone", getPhone());
 
@@ -86,5 +86,9 @@ public class Client extends Aggregate {
 
     public String getPhone() {
         return phone;
+    }
+
+    public List<Event> getUncommittedEvents() {
+        return super.getUncommittedEvents();
     }
 }
